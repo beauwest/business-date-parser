@@ -221,17 +221,20 @@ export function parseTime(input) {
       }
     },
     {
-      regex: /^(\d{1,2})[:.,;\-]?(\d{1,2})?[:.,;\-]?(\d{1,2})?[:.,;\-]?(\d{1,3})?[:.,;\-]?\s*([ap]m?)?\s*(\w+)?/i,
+      regex: /^(\d{1,2})[:.,;\-]?(\d{1,2})?[:.,;\-]?(\d{1,2})?[:.,;\-]?(\d{1,3})?[:.,;\-]?\s*([ap]m?)?/i,
       parse: (matches) => {
         let hours = matches[1];
         const minutes = matches[2] || 0;
         const seconds = matches[3] || 0;
         const milliseconds = matches[4] || 0;
         const meridiem = matches[5] || 0;
-        const timezone = matches[6];
 
         if (!meridiem && !hours.startsWith('0')) {
           hours = adjustMeridiem(hours);
+        }
+
+        if (meridiem && meridiem.toLowerCase().startsWith('p')) {
+          hours = parseInt(hours, 10) + 12;
         }
 
         const date = new Date();

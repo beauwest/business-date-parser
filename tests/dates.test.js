@@ -162,11 +162,11 @@ test('2 am', t => {
 });
 
 test('2:45p', t => {
-  expectTime(t, t.title, 2, 45);
+  expectTime(t, t.title, 14, 45);
 });
 
 test('2:45 pm', t => {
-  expectTime(t, t.title, 2, 45);
+  expectTime(t, t.title, 14, 45);
 });
 
 test('08:22:34.028 CST', t => {
@@ -180,4 +180,10 @@ test('1/1/2020 08:22:34.028 CST', t => {
 test('datetime: 4/26', t => {
   const now = new Date();
   expectDateAndTime(t, t.title, now.getFullYear(), 3, 26);
+});
+
+test('+3 2:30p', t => {
+  const now = new Date();
+  now.setDate(now.getDate() + 3);
+  expectDateAndTime(t, t.title, now.getFullYear(), now.getMonth(), now.getDate(), 14, 30);
 });
