@@ -24,6 +24,7 @@ An opinionated, zero-dependency, fast user input parser for date & times. This m
 - `2a`: 2:00 AM
 - `2:45`: 2:45 PM
 - `2:45a`: 2:45 AM
+- `530`: 5:30 PM
 - `8:22:34.028`: 8:22:34.028 AM
 
 Anything that does not match the rule-based parsing will fall back to Javascript's built-in [Date.parse()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse).

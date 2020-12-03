@@ -24,12 +24,22 @@ function isDate(input) {
   return input instanceof Date && !isNaN(input.valueOf());
 }
 
-function adjustMeridiem(hour) {
+function adjustForBusinessHours(hour) {
   hour = parseInt(hour, 10);
   if (hour >= 1 && hour <= 6) {
     return hour + 12;
   }
   return hour;
+}
+
+function adjustForMeridiem(hours, meridiem) {
+  if (meridiem && meridiem.toLowerCase().startsWith('p')) {
+    hours = parseInt(hours, 10) + 12;
+  }
+  if (!meridiem && !hours.startsWith('0')) {
+    hours = adjustForBusinessHours(hours);
+  }
+  return hours;
 }
 
 export function parseDateAndTime(input) {
@@ -221,21 +231,43 @@ export function parseTime(input) {
       }
     },
     {
+      regex: /^(\d{1,4})\s*([ap]m?)?$/i, // +#
+      parse: (matches) => {
+        const numbers = matches[1];
+        const meridiem = matches[2];
+        let hour;
+        let minutes = 0;
+        switch (numbers.length) {
+          case 1:
+          case 2:
+            hour = numbers;
+            break;
+          case 3:
+            hour = numbers.substring(0, 1);
+            minutes = numbers.substring(1);
+            break;
+          case 4:
+            hour = numbers.substring(0, 2);
+            minutes = numbers.substring(2)
+        }
+
+        hour = adjustForMeridiem(hour, meridiem);
+
+        const date = new Date();
+        date.setHours(hour, minutes, 0, 0);
+        return date;
+      }
+    },
+    {
       regex: /^(\d{1,2})[:.,;\-]?(\d{1,2})?[:.,;\-]?(\d{1,2})?[:.,;\-]?(\d{1,3})?[:.,;\-]?\s*([ap]m?)?/i,
       parse: (matches) => {
         let hours = matches[1];
         const minutes = matches[2] || 0;
         const seconds = matches[3] || 0;
         const milliseconds = matches[4] || 0;
-        const meridiem = matches[5] || 0;
+        const meridiem = matches[5];
 
-        if (!meridiem && !hours.startsWith('0')) {
-          hours = adjustMeridiem(hours);
-        }
-
-        if (meridiem && meridiem.toLowerCase().startsWith('p')) {
-          hours = parseInt(hours, 10) + 12;
-        }
+        hours = adjustForMeridiem(hours, meridiem);
 
         const date = new Date();
         date.setHours(hours, minutes, seconds, milliseconds);

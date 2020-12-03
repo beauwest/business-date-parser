@@ -169,6 +169,10 @@ test('2:45 pm', t => {
   expectTime(t, t.title, 14, 45);
 });
 
+test('530', t => {
+  expectTime(t, t.title, 17, 30);
+});
+
 test('08:22:34.028 CST', t => {
   expectTime(t, t.title, 8, 22, 34, 28);
 });
