@@ -1,0 +1,30 @@
+{
+  "name": "@beauwest/business-date-parser",
+  "version": "1.0.0",
+  "description": "An opinionated, zero-dependency, fast user input parser for date & times.",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beauwest/business-date-parser.git"
+  },
+  "keywords": [
+    "date",
+    "time",
+    "datetime",
+    "parser",
+    "business"
+  ],
+  "author": "Beau West",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/beauwest/business-date-parser/issues"
+  },
+  "homepage": "https://github.com/beauwest/business-date-parser#readme",
+  "devDependencies": {
+    "ava": "^3.12.1"
+  }
+}
