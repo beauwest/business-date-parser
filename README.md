@@ -27,3 +27,14 @@ An opinionated, zero-dependency, fast user input parser for date & times. This m
 - `8:22:34.028`: 8:22:34.028 AM
 
 Anything that does not match the rule-based parsing will fall back to Javascript's built-in [Date.parse()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse).
+
+## Getting Started
+```javascript
+import {parseDate, parseTime, parseDateAndTime} from 'business-date-parser';
+
+const threeDaysFromNow = parseDate('+3');
+
+const snackTime = parseTime('2:30p');
+
+const snackTimeThreeDaysFromNow = parseTime('+3 2:30p');
+```
