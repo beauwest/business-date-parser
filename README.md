@@ -1,4 +1,4 @@
-# Business Date Parser
+# Business Date Parser ![Build Status](https://travis-ci.org/beauwest/business-date-parser.svg?branch=master)
 An opinionated, zero-dependency, fast user input parser for date & times. This module is designed to process & parse user input into a Javascript date object.
 
 ## Supported Date Formats
