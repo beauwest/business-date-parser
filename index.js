@@ -1,7 +1,9 @@
 function calculateFullYear(input) {
-  const currentShortYear = parseInt((new Date()).getFullYear().toString().substring(2), 10);
+  const currentYear = (new Date()).getFullYear().toString();
+  const currentShortPrefix = parseInt(currentYear.substring(0, 2), 10);
+  const currentShortSuffix = parseInt(currentYear.substring(2), 10);
   const inputAsInt = parseInt(input, 10);
-  const prefix = (inputAsInt > currentShortYear + 10 ? '19' : '20');
+  const prefix = (inputAsInt > currentShortSuffix + 10 ? currentShortPrefix - 1 : currentShortPrefix);
   return `${prefix}${input}`;
 }
 
@@ -22,6 +24,10 @@ function systemParseDate(input) {
 
 function isDate(input) {
   return input instanceof Date && !isNaN(input.valueOf());
+}
+
+function isTimeStamp(input) {
+  return Number.isFinite(input);
 }
 
 function adjustForBusinessHours(hour) {
@@ -45,6 +51,10 @@ function adjustForMeridiem(hours, meridiem) {
 export function parseDateAndTime(input, options = {preferTime: false, defaultDate: null}) {
   if (isDate(input)) {
     return input;
+  }
+  
+  if (isTimeStamp(input)) {
+    return new Date(input);
   }
 
   input = input.toString().trim();
@@ -75,6 +85,10 @@ export function parseDateAndTime(input, options = {preferTime: false, defaultDat
 export function parseDate(input) {
   if (isDate(input)) {
     return input;
+  }
+  
+  if (isTimeStamp(input)) {
+    return new Date(input);
   }
 
   input = input.toString().trim();
@@ -209,6 +223,10 @@ export function parseDate(input) {
 export function parseTime(input) {
   if (isDate(input)) {
     return input;
+  }
+  
+  if (isTimeStamp(input)) {
+    return new Date(input);
   }
 
   input = input.toString().trim();

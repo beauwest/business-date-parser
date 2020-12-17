@@ -48,6 +48,11 @@ test('Date Object', t => {
   expectDate(t, now, now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds());
 });
 
+test('Date Timestamp', t => {
+  const date = new Date('1995-12-17T00:00:00');
+  expectDate(t, date.getTime(), 1995, 11, 17);
+});
+
 test('date: c', t => {
   const now = new Date();
   expectDate(t, t.title, now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds());
@@ -183,6 +188,10 @@ test('time: 530', t => {
   expectTime(t, t.title, 17, 30);
 });
 
+test('time: 9:23:3', t => {
+  expectTime(t, t.title, 9, 23, 3);
+});
+
 test('time: 08:22:34.028 CST', t => {
   expectTime(t, t.title, 8, 22, 34, 28);
 });
@@ -208,7 +217,7 @@ test('datetime: 9', t => {
 });
 
 test('datetime: 9 with options', t => {
-  const result = parseDateAndTime(9, {preferTime: true, defaultDate: '1988-04-26'});
+  const result = parseDateAndTime('9', {preferTime: true, defaultDate: '1988-04-26'});
   t.is(result.getFullYear(), 1988);
   t.is(result.getMonth(), 3);
   t.is(result.getDate(), 26);

@@ -1,5 +1,9 @@
 # Change Log
 
+## Release 1.0.3
+- Added support for numeric timestamps as input
+- Automatically adjust short years based on current decade
+
 ## Release 1.0.2
 Added options to `parseDateAndTime()`
 - `preferTime`: Parses as time when no date part is found
