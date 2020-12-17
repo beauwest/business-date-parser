@@ -1,4 +1,4 @@
-# Business Date Parser ![Node.js CI](https://github.com/beauwest/business-date-parser/workflows/Node.js%20CI/badge.svg)
+# Business Date Parser [![Node.js CI](https://github.com/beauwest/business-date-parser/workflows/Node.js%20CI/badge.svg)](https://github.com/beauwest/business-date-parser/actions)
 
 An opinionated, zero-dependency, fast user input parser for date & times. This module is designed to process & parse
 user input into a Javascript date object.
