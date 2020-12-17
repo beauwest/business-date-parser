@@ -146,25 +146,27 @@ export function parseDate(input) {
       }
     },
     {
-      regex: /^(\d{1,2})[\/\\\-.,;](\d{1,2})$/, // MM/DD
+      regex: /^(\d{1,2})[\/\\\-.,;](\d{1,2})?$/, // MM/ or MM/DD
       parse: (matches) => {
         const date = new Date();
         date.setMonth(parseInt(matches[1], 10) - 1);
-        date.setDate(parseInt(matches[2], 10));
+        date.setDate(parseInt(matches[2] || 1, 10));
         date.setHours(0, 0, 0, 0);
         return date;
       }
     },
     {
-      regex: /^(\d{1,2})[\/\\\-.,;](\d{1,2})[\/\\\-.,;](\d{2,4})$/, // MM/DD/YYYY or MM/DD/YY
+      regex: /^(\d{1,2})[\/\\\-.,;](\d{1,2})[\/\\\-.,;](\d{2,4})?$/, // MM/DD/ or MM/DD/YYYY or MM/DD/YY
       parse: (matches) => {
         let year = matches[3];
-        if (year.length === 2) {
+        if (year?.length === 2) {
           year = calculateFullYear(year);
         }
 
         const date = new Date();
-        date.setFullYear(parseInt(year, 10));
+        if (year) {
+          date.setFullYear(parseInt(year, 10));
+        }
         date.setMonth(parseInt(matches[1], 10) - 1);
         date.setDate(parseInt(matches[2], 10));
         date.setHours(0, 0, 0, 0);
