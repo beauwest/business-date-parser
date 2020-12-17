@@ -1,7 +1,10 @@
-# Business Date Parser ![Build Status](https://travis-ci.org/beauwest/business-date-parser.svg?branch=master)
-An opinionated, zero-dependency, fast user input parser for date & times. This module is designed to process & parse user input into a Javascript date object.
+# Business Date Parser [![Build Status](https://travis-ci.org/beauwest/business-date-parser.svg?branch=master)](https://travis-ci.org/beauwest/business-date-parser)
+
+An opinionated, zero-dependency, fast user input parser for date & times. This module is designed to process & parse
+user input into a Javascript date object.
 
 ## Supported Date Formats
+
 - `c`: Current Date
 - `y`: Yesterday
 - `t`: Tomorrow
@@ -16,6 +19,7 @@ An opinionated, zero-dependency, fast user input parser for date & times. This m
 - `2025-03-01`: March 1st, 2025
 
 ## Supported Time Formats
+
 - `c`: Current Time
 - `+20`: 20 minutes from now
 - `-20`: 20 minutes ago
@@ -27,15 +31,27 @@ An opinionated, zero-dependency, fast user input parser for date & times. This m
 - `530`: 5:30 PM
 - `8:22:34.028`: 8:22:34.028 AM
 
-Anything that does not match the rule-based parsing will fall back to Javascript's built-in [Date.parse()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse).
+Anything that does not match the rule-based parsing will fall back to Javascript's
+built-in [Date.parse()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse).
 
 ## Getting Started
+
 ```javascript
 import {parseDate, parseTime, parseDateAndTime} from 'business-date-parser';
 
+const theFifth = parseDate('5');
+
 const threeDaysFromNow = parseDate('+3');
+
+const quittingTime = parseTime('5');
 
 const snackTime = parseTime('2:30p');
 
 const snackTimeThreeDaysFromNow = parseTime('+3 2:30p');
+
+// Will prefer time parsing when no date part is found in a dateAndTime string
+const preferTime = parseDateAndTime('9a', {preferTime: true});
+
+// Default to a specific date when preferring time parsing and there is no date part.
+const preferTimeWithSpecificDate = parseDateAndTime('9a', {preferTime: true, defaultDate: '2025-03-01'});
 ```

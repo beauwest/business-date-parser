@@ -42,7 +42,7 @@ function adjustForMeridiem(hours, meridiem) {
   return hours;
 }
 
-export function parseDateAndTime(input) {
+export function parseDateAndTime(input, options = {preferTime: false, defaultDate: null}) {
   if (isDate(input)) {
     return input;
   }
@@ -51,6 +51,10 @@ export function parseDateAndTime(input) {
 
   let datePart = input;
   let timePart = '00:00:00';
+  if (options.preferTime) {
+    datePart = options.defaultDate || new Date();
+    timePart = input;
+  }
 
   const firstSpace = input.indexOf(' ');
   if (firstSpace !== -1) {

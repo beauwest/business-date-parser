@@ -1,5 +1,10 @@
 # Change Log
 
+## Release 1.0.2
+Added options to `parseDateAndTime()`
+- `preferTime`: Parses as time when no date part is found
+- `defaultDate`: Set a date to default to when time is preferred
+
 ## Release 1.0.1
 Added support for more date formats
 - 12/

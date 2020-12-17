@@ -201,3 +201,19 @@ test('datetime: +3 2:30p', t => {
   now.setDate(now.getDate() + 3);
   expectDateAndTime(t, t.title, now.getFullYear(), now.getMonth(), now.getDate(), 14, 30);
 });
+
+test('datetime: 9', t => {
+  const now = new Date();
+  expectDateAndTime(t, t.title, now.getFullYear(), now.getMonth(), 9);
+});
+
+test('datetime: 9 with options', t => {
+  const result = parseDateAndTime(9, {preferTime: true, defaultDate: '1988-04-26'});
+  t.is(result.getFullYear(), 1988);
+  t.is(result.getMonth(), 3);
+  t.is(result.getDate(), 26);
+  t.is(result.getHours(), 9);
+  t.is(result.getMinutes(), 0);
+  t.is(result.getSeconds(), 0);
+  t.is(result.getMilliseconds(), 0);
+});
