@@ -1,5 +1,8 @@
 # Change Log
 
+## Release 1.0.4
+- Fix a bug where hour 12 would incorrectly be adjusted for AM/PM
+
 ## Release 1.0.3
 - Added support for numeric timestamps as input
 - Automatically adjust short years based on current decade

@@ -39,13 +39,14 @@ function adjustForBusinessHours(hour) {
 }
 
 function adjustForMeridiem(hours, meridiem) {
-  if (meridiem && meridiem.toLowerCase().startsWith('p')) {
-    hours = parseInt(hours, 10) + 12;
+  const intHours = parseInt(hours, 10);
+  if (meridiem && meridiem.toLowerCase().startsWith('p') && intHours < 12) {
+    hours = intHours + 12;
   }
   if (!meridiem && !hours.startsWith('0')) {
     hours = adjustForBusinessHours(hours);
   }
-  return hours;
+  return hours.toString();
 }
 
 export function parseDateAndTime(input, options = {preferTime: false, defaultDate: null}) {
@@ -284,7 +285,7 @@ export function parseTime(input) {
     },
     {
       regex: /^(\d{1,2})[:.,;\-]?(\d{1,2})?[:.,;\-]?(\d{1,2})?[:.,;\-]?(\d{1,3})?[:.,;\-]?\s*([ap]m?)?/i,
-      parse: (matches) => {
+      parse: (matches, input) => {
         let hours = matches[1];
         const minutes = matches[2] || 0;
         const seconds = matches[3] || 0;
