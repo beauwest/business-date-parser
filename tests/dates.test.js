@@ -53,6 +53,17 @@ test('Date Timestamp', t => {
   expectDate(t, date.getTime(), 1995, 11, 17);
 });
 
+test('Date Custom Rule', t => {
+  const result = parseDate('unix epoch', {
+    rules: [{
+      regex: /^unix epoch$/i, parse: () => {
+        return new Date(0);
+      }
+    }]
+  });
+  t.is(result.getTime(), 0);
+});
+
 test('date: c', t => {
   const now = new Date();
   expectDate(t, t.title, now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds());

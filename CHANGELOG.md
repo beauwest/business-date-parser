@@ -1,5 +1,12 @@
 # Change Log
 
+## Release 1.0.6
+- Added a `rules` option to all parse functions that allows users to specify their own parsing rules.
+- Improved the documentation.
+
+## Release 1.0.5
+- Switch from Travis CI to Github Actions.
+
 ## Release 1.0.4
 - Fix a bug where hour 12 would incorrectly be adjusted for AM/PM
 

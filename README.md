@@ -3,7 +3,7 @@
 An opinionated, zero-dependency, fast user input parser for date & times. This module is designed to process & parse
 user input into a Javascript date object.
 
-## Supported Date Formats
+## Date Format Examples
 
 - `c`: Current Date
 - `y`: Yesterday
@@ -18,7 +18,7 @@ user input into a Javascript date object.
 - `5-3-18`: May 3rd, 2018
 - `2025-03-01`: March 1st, 2025
 
-## Supported Time Formats
+## Time Format Examples
 
 - `c`: Current Time
 - `+20`: 20 minutes from now
@@ -31,8 +31,19 @@ user input into a Javascript date object.
 - `530`: 5:30 PM
 - `8:22:34.028`: 8:22:34.028 AM
 
+## Date & Time format examples
+- Date and time parsing splits based on the first space encountered.
+- `y 5p`: Yesterday at 5:00PM
+- `l 8a`: Last day of the month at 8:00AM
+- `2025-03-01 8:22:34.028`: March 1st, 2025 at 8:22:34.028 AM
+
 Anything that does not match the rule-based parsing will fall back to Javascript's
 built-in [Date.parse()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse).
+
+## Installing
+```bash
+npm i @beauwest/business-date-parser
+```
 
 ## Getting Started
 

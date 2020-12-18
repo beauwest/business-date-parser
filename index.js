@@ -49,11 +49,21 @@ function adjustForMeridiem(hours, meridiem) {
   return hours.toString();
 }
 
-export function parseDateAndTime(input, options = {preferTime: false, defaultDate: null}) {
+function testForMatches(input = '', userRules = [], systemRules = []) {
+  for (const syntax of [...userRules, ...systemRules]) {
+    if (syntax.regex.test(input)) {
+      const matches = input.match(syntax.regex);
+      return syntax.parse(matches, input);
+    }
+  }
+  return null;
+}
+
+export function parseDateAndTime(input, options = {rules: [], preferTime: false, defaultDate: null}) {
   if (isDate(input)) {
     return input;
   }
-  
+
   if (isTimeStamp(input)) {
     return new Date(input);
   }
@@ -73,8 +83,8 @@ export function parseDateAndTime(input, options = {preferTime: false, defaultDat
     timePart = input.substring(firstSpace + 1);
   }
 
-  const parsedDate = parseDate(datePart);
-  const parsedTime = parseTime(timePart);
+  const parsedDate = parseDate(datePart, options);
+  const parsedTime = parseTime(timePart, options);
 
   if (parsedTime) {
     parsedDate.setHours(parsedTime.getHours(), parsedTime.getMinutes(), parsedTime.getSeconds(), parsedTime.getMilliseconds());
@@ -83,11 +93,11 @@ export function parseDateAndTime(input, options = {preferTime: false, defaultDat
   return parsedDate;
 }
 
-export function parseDate(input) {
+export function parseDate(input, options = {rules: []}) {
   if (isDate(input)) {
     return input;
   }
-  
+
   if (isTimeStamp(input)) {
     return new Date(input);
   }
@@ -211,21 +221,14 @@ export function parseDate(input) {
     }
   ];
 
-  for (const syntax of parseRules) {
-    if (syntax.regex.test(input)) {
-      const matches = input.match(syntax.regex);
-      return syntax.parse(matches, input);
-    }
-  }
-
-  return null;
+  return testForMatches(input, options.rules, parseRules);
 }
 
-export function parseTime(input) {
+export function parseTime(input, options = {rules: []}) {
   if (isDate(input)) {
     return input;
   }
-  
+
   if (isTimeStamp(input)) {
     return new Date(input);
   }
@@ -298,27 +301,8 @@ export function parseTime(input) {
         date.setHours(hours, minutes, seconds, milliseconds);
         return date;
       }
-    },
-    {
-      regex: /xxx.*/,
-      parse: (matches, string) => {
-        let parsed = systemParseDate(string);
-
-        if (!isDate(parsed)) {
-          const now = new Date();
-          parsed = systemParseDate(`${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${string}`);
-        }
-        return parsed;
-      }
     }
   ];
 
-  for (const syntax of parseRules) {
-    if (syntax.regex.test(input)) {
-      const matches = input.match(syntax.regex);
-      return syntax.parse(matches, input);
-    }
-  }
-
-  return null;
+  return testForMatches(input, options.rules, parseRules);
 }
