@@ -1,5 +1,8 @@
 # Change Log
 
+## Release 1.0.7
+- Fixed a month parsing bug when parsing dates on the 31st day of the current month, and entering a month that did not have 31 days.
+
 ## Release 1.0.6
 - Added a `rules` option to all parse functions that allows users to specify their own parsing rules.
 - Improved the documentation.

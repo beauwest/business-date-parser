@@ -176,10 +176,9 @@ export function parseDate(input, options = {rules: []}) {
     },
     {
       regex: /^(\d{1,2})[\/\\\-.,;](\d{1,2})?$/, // MM/ or MM/DD
-      parse: (matches) => {
+      parse: (matches, input) => {
         const date = new Date();
-        date.setMonth(parseInt(matches[1], 10) - 1);
-        date.setDate(parseInt(matches[2] || 1, 10));
+        date.setMonth(parseInt(matches[1], 10) - 1, parseInt(matches[2] || 1, 10));
         date.setHours(0, 0, 0, 0);
         return date;
       }
@@ -196,8 +195,7 @@ export function parseDate(input, options = {rules: []}) {
         if (year) {
           date.setFullYear(parseInt(year, 10));
         }
-        date.setMonth(parseInt(matches[1], 10) - 1);
-        date.setDate(parseInt(matches[2], 10));
+        date.setMonth(parseInt(matches[1], 10) - 1, parseInt(matches[2], 10));
         date.setHours(0, 0, 0, 0);
         return date;
       }
@@ -207,8 +205,7 @@ export function parseDate(input, options = {rules: []}) {
       parse: (matches) => {
         const date = new Date();
         date.setFullYear(parseInt(matches[1], 10));
-        date.setMonth(parseInt(matches[2], 10) - 1);
-        date.setDate(parseInt(matches[3], 10));
+        date.setMonth(parseInt(matches[2], 10) - 1, parseInt(matches[3], 10));
         date.setHours(0, 0, 0, 0);
         return date;
       }

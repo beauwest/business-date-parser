@@ -5,14 +5,14 @@ import {createRequire} from 'module'
 const require = createRequire(import.meta.url);
 const test = require('ava');
 
-function expectDate(t, input, year, month, date, hours = 0, minutes = 0, seconds = 0) {
+function expectDate(t, input, year, month, day, hours = 0, minutes = 0, seconds = 0) {
   if (input.replace) {
     input = input.replace('date: ', '');
   }
   const result = parseDate(input);
   t.is(result.getFullYear(), year);
-  t.is(result.getMonth(), month);
-  t.is(result.getDate(), date);
+  t.is(result.getMonth() + 1, month);
+  t.is(result.getDate(), day);
   t.is(result.getHours(), hours);
   t.is(result.getMinutes(), minutes);
   t.is(result.getSeconds(), seconds);
@@ -29,14 +29,14 @@ function expectTime(t, input, hours = 0, minutes = 0, seconds = 0, milliseconds 
   t.true(result.getMilliseconds() >= milliseconds || milliseconds === 0);
 }
 
-function expectDateAndTime(t, input, year, month, date, hours = 0, minutes = 0, seconds = 0, milliseconds = 0) {
+function expectDateAndTime(t, input, year, month, day, hours = 0, minutes = 0, seconds = 0, milliseconds = 0) {
   if (input.replace) {
     input = input.replace('datetime: ', '');
   }
   const result = parseDateAndTime(input);
   t.is(result.getFullYear(), year);
-  t.is(result.getMonth(), month);
-  t.is(result.getDate(), date);
+  t.is(result.getMonth() + 1, month);
+  t.is(result.getDate(), day);
   t.is(result.getHours(), hours);
   t.is(result.getMinutes(), minutes);
   t.is(result.getSeconds(), seconds);
@@ -45,12 +45,12 @@ function expectDateAndTime(t, input, year, month, date, hours = 0, minutes = 0, 
 
 test('Date Object', t => {
   const now = new Date();
-  expectDate(t, now, now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds());
+  expectDate(t, now, now.getFullYear(), now.getMonth() + 1, now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds());
 });
 
 test('Date Timestamp', t => {
   const date = new Date('1995-12-17T00:00:00');
-  expectDate(t, date.getTime(), 1995, 11, 17);
+  expectDate(t, date.getTime(), 1995, 12, 17);
 });
 
 test('Date Custom Rule', t => {
@@ -66,88 +66,98 @@ test('Date Custom Rule', t => {
 
 test('date: c', t => {
   const now = new Date();
-  expectDate(t, t.title, now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds());
+  expectDate(t, t.title, now.getFullYear(), now.getMonth() + 1, now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds());
 });
 
 test('date: t', t => {
   const now = new Date();
-  expectDate(t, t.title, now.getFullYear(), now.getMonth(), now.getDate() + 1);
+  now.setDate(now.getDate() + 1);
+  expectDate(t, t.title, now.getFullYear(), now.getMonth() + 1, now.getDate());
 });
 
 test('date: y', t => {
   const now = new Date();
-  expectDate(t, t.title, now.getFullYear(), now.getMonth(), now.getDate() - 1);
+  expectDate(t, t.title, now.getFullYear(), now.getMonth() + 1, now.getDate() - 1);
 });
 
 test('date: f', t => {
   const now = new Date();
-  expectDate(t, t.title, now.getFullYear(), now.getMonth(), 1);
+  expectDate(t, t.title, now.getFullYear(), now.getMonth() + 1, 1);
 });
 
 test('date: l', t => {
   const now = new Date();
-  expectDate(t, t.title, now.getFullYear(), now.getMonth(), new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate());
+  expectDate(t, t.title, now.getFullYear(), now.getMonth() + 1, new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate());
 });
 
 test('date: 11', t => {
   const now = new Date();
-  expectDate(t, t.title, now.getFullYear(), now.getMonth(), 11);
+  expectDate(t, t.title, now.getFullYear(), now.getMonth() + 1, 11);
 });
 
 test('date: 11/', t => {
   const now = new Date();
-  expectDate(t, t.title, now.getFullYear(), 10, 1);
+  expectDate(t, t.title, now.getFullYear(), 11, 1);
 });
 
 test('date: 4/26', t => {
   const now = new Date();
-  expectDate(t, t.title, now.getFullYear(), 3, 26);
+  expectDate(t, t.title, now.getFullYear(), 4, 26);
+});
+
+test('date: 11/1', t => {
+  const now = new Date();
+  expectDate(t, t.title, now.getFullYear(), 11, 1);
 });
 
 test('date: 4/26/', t => {
   const now = new Date();
-  expectDate(t, t.title, now.getFullYear(), 3, 26);
+  expectDate(t, t.title, now.getFullYear(), 4, 26);
 });
 
 test('date: 4-26', t => {
   const now = new Date();
-  expectDate(t, t.title, now.getFullYear(), 3, 26);
+  expectDate(t, t.title, now.getFullYear(), 4, 26);
 });
 
 test('date: 4/26/1988', t => {
-  expectDate(t, t.title, 1988, 3, 26);
+  expectDate(t, t.title, 1988, 4, 26);
 });
 
 test('date: 4/26/88', t => {
-  expectDate(t, t.title, 1988, 3, 26);
+  expectDate(t, t.title, 1988, 4, 26);
+});
+
+test('date: 11/5/2020', t => {
+  expectDate(t, t.title, 2020, 11, 5);
 });
 
 test('date: 5-3-18', t => {
-  expectDate(t, t.title, 2018, 4, 3);
+  expectDate(t, t.title, 2018, 5, 3);
 });
 
 test('date: 4-26-1988', t => {
-  expectDate(t, t.title, 1988, 3, 26);
+  expectDate(t, t.title, 1988, 4, 26);
 });
 
 test('date: 1988-04-26', t => {
-  expectDate(t, t.title, 1988, 3, 26);
+  expectDate(t, t.title, 1988, 4, 26);
 });
 
 test('date: 2025-03-01', t => {
-  expectDate(t, t.title, 2025, 2, 1);
+  expectDate(t, t.title, 2025, 3, 1);
 });
 
 test('date: -20', t => {
   const now = new Date();
   now.setDate(now.getDate() - 20);
-  expectDate(t, t.title, now.getFullYear(), now.getMonth(), now.getDate());
+  expectDate(t, t.title, now.getFullYear(), now.getMonth() + 1, now.getDate());
 });
 
 test('date: +20', t => {
   const now = new Date();
   now.setDate(now.getDate() + 20);
-  expectDate(t, t.title, now.getFullYear(), now.getMonth(), now.getDate());
+  expectDate(t, t.title, now.getFullYear(), now.getMonth() + 1, now.getDate());
 });
 
 test('time: c', t => {
@@ -212,29 +222,29 @@ test('time: 08:22:34.028 CST', t => {
 });
 
 test('datetime: 1/1/2020 08:22:34.028 CST', t => {
-  expectDateAndTime(t, t.title, 2020, 0, 1, 8, 22, 34, 28);
+  expectDateAndTime(t, t.title, 2020, 1, 1, 8, 22, 34, 28);
 });
 
 test('datetime: 4/26', t => {
   const now = new Date();
-  expectDateAndTime(t, t.title, now.getFullYear(), 3, 26);
+  expectDateAndTime(t, t.title, now.getFullYear(), 4, 26);
 });
 
 test('datetime: +3 2:30p', t => {
   const now = new Date();
   now.setDate(now.getDate() + 3);
-  expectDateAndTime(t, t.title, now.getFullYear(), now.getMonth(), now.getDate(), 14, 30);
+  expectDateAndTime(t, t.title, now.getFullYear(), now.getMonth() + 1, now.getDate(), 14, 30);
 });
 
 test('datetime: 9', t => {
   const now = new Date();
-  expectDateAndTime(t, t.title, now.getFullYear(), now.getMonth(), 9);
+  expectDateAndTime(t, t.title, now.getFullYear(), now.getMonth() + 1, 9);
 });
 
 test('datetime: 9 with options', t => {
   const result = parseDateAndTime('9', {preferTime: true, defaultDate: '1988-04-26'});
   t.is(result.getFullYear(), 1988);
-  t.is(result.getMonth(), 3);
+  t.is(result.getMonth() + 1, 4);
   t.is(result.getDate(), 26);
   t.is(result.getHours(), 9);
   t.is(result.getMinutes(), 0);
