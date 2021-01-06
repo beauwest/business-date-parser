@@ -1,5 +1,9 @@
 # Change Log
 
+## Release 1.0.8
+- Always return the original input if it's falsy and not a timestamp value of 0.
+- Parse as a date part, in the date & time parsing, if there is only one part and it's likely a date because it contains a "-" or a "/".
+
 ## Release 1.0.7
 - Fixed a month parsing bug when parsing dates on the 31st day of the current month, and entering a month that did not have 31 days.
 

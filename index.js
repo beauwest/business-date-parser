@@ -30,6 +30,14 @@ function isTimeStamp(input) {
   return Number.isFinite(input);
 }
 
+function isNotValid(input) {
+  return (!isTimeStamp(input) && !input);
+}
+
+function isLikelyDateFormat(input) {
+  return (input.includes('-') || input.includes('/'));
+}
+
 function adjustForBusinessHours(hour) {
   hour = parseInt(hour, 10);
   if (hour >= 1 && hour <= 6) {
@@ -68,19 +76,24 @@ export function parseDateAndTime(input, options = {rules: [], preferTime: false,
     return new Date(input);
   }
 
+  if (isNotValid(input)) {
+    return input;
+  }
+
   input = input.toString().trim();
 
   let datePart = input;
   let timePart = '00:00:00';
-  if (options.preferTime) {
-    datePart = options.defaultDate || new Date();
-    timePart = input;
-  }
 
   const firstSpace = input.indexOf(' ');
   if (firstSpace !== -1) {
     datePart = input.substring(0, firstSpace);
     timePart = input.substring(firstSpace + 1);
+  } else {
+    if (options.preferTime && !isLikelyDateFormat(input)) {
+      datePart = options.defaultDate || new Date();
+      timePart = input;
+    }
   }
 
   const parsedDate = parseDate(datePart, options);
@@ -100,6 +113,10 @@ export function parseDate(input, options = {rules: []}) {
 
   if (isTimeStamp(input)) {
     return new Date(input);
+  }
+
+  if (isNotValid(input)) {
+    return input;
   }
 
   input = input.toString().trim();
@@ -228,6 +245,10 @@ export function parseTime(input, options = {rules: []}) {
 
   if (isTimeStamp(input)) {
     return new Date(input);
+  }
+
+  if (isNotValid(input)) {
+    return input;
   }
 
   input = input.toString().trim();

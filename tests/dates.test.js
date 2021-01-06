@@ -43,6 +43,27 @@ function expectDateAndTime(t, input, year, month, day, hours = 0, minutes = 0, s
   t.is(result.getMilliseconds(), milliseconds);
 }
 
+test('Blank Date', t => {
+  const blankValue = parseDate('');
+  t.falsy(blankValue);
+  const nullValue = parseDate(null);
+  t.falsy(nullValue);
+});
+
+test('Blank Time', t => {
+  const blankValue = parseTime('');
+  t.falsy(blankValue);
+  const nullValue = parseTime(null);
+  t.falsy(nullValue);
+});
+
+test('Blank Date And Time', t => {
+  const blankValue = parseDateAndTime('');
+  t.falsy(blankValue);
+  const nullValue = parseDateAndTime(null);
+  t.falsy(nullValue);
+});
+
 test('Date Object', t => {
   const now = new Date();
   expectDate(t, now, now.getFullYear(), now.getMonth() + 1, now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds());
@@ -250,4 +271,18 @@ test('datetime: 9 with options', t => {
   t.is(result.getMinutes(), 0);
   t.is(result.getSeconds(), 0);
   t.is(result.getMilliseconds(), 0);
+});
+
+test('datetime: Valid Date with Slashes but Preferring TIme', t => {
+  const result = parseDateAndTime('4/26/1988', {preferTime: true});
+  t.is(result.getFullYear(), 1988);
+  t.is(result.getMonth() + 1, 4);
+  t.is(result.getDate(), 26);
+});
+
+test('datetime: Valid Date with Dashes but Preferring TIme', t => {
+  const result = parseDateAndTime('1988-04-26', {preferTime: true});
+  t.is(result.getFullYear(), 1988);
+  t.is(result.getMonth() + 1, 4);
+  t.is(result.getDate(), 26);
 });
