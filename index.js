@@ -51,6 +51,9 @@ function adjustForMeridiem(hours, meridiem) {
   if (meridiem && meridiem.toLowerCase().startsWith('p') && intHours < 12) {
     hours = intHours + 12;
   }
+  if (meridiem && meridiem.toLowerCase().startsWith('a') && intHours === 12) {
+    hours = intHours - 12;
+  }
   if (!meridiem && !hours.startsWith('0')) {
     hours = adjustForBusinessHours(hours);
   }
@@ -277,7 +280,7 @@ export function parseTime(input, options = {rules: []}) {
       }
     },
     {
-      regex: /^(\d{1,4})\s*([ap]m?)?$/i, // +#
+      regex: /^(\d{1,4})\s*([ap]m?)?$/i,
       parse: (matches) => {
         const numbers = matches[1];
         const meridiem = matches[2];

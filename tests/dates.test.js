@@ -226,6 +226,14 @@ test('time: 2:45 pm', t => {
   expectTime(t, t.title, 14, 45);
 });
 
+test('time: 12:00 AM', t => {
+  expectTime(t, t.title, 0, 0);
+});
+
+test('time: 12:45am', t => {
+  expectTime(t, t.title, 0, 45);
+});
+
 test('time: 530', t => {
   expectTime(t, t.title, 17, 30);
 });

@@ -1,5 +1,8 @@
 # Change Log
 
+## Release 1.0.9
+- Fix "12:00 AM" time parsing.
+
 ## Release 1.0.8
 - Always return the original input if it's falsy and not a timestamp value of 0.
 - Parse as a date part, in the date & time parsing, if there is only one part and it's likely a date because it contains a "-" or a "/".
