@@ -1,6 +1,6 @@
 {
   "name": "@beauwest/business-date-parser",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "An opinionated, zero-dependency, fast user input parser for date & times.",
   "type": "module",
   "main": "index.js",
