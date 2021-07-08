@@ -250,6 +250,23 @@ test('time: 08:22:34.028 CST', t => {
   expectTime(t, t.title, 8, 22, 34, 28);
 });
 
+test('datetime: c', t => {
+  const now = new Date();
+  expectDateAndTime(t, t.title, now.getFullYear(), now.getMonth() + 1, now.getDate());
+});
+
+test('datetime: t', t => {
+  const now = new Date();
+  now.setDate(now.getDate() + 1);
+  expectDateAndTime(t, t.title, now.getFullYear(), now.getMonth() + 1, now.getDate());
+});
+
+test('datetime: y', t => {
+  const now = new Date();
+  now.setDate(now.getDate() - 1);
+  expectDateAndTime(t, t.title, now.getFullYear(), now.getMonth() + 1, now.getDate());
+});
+
 test('datetime: 1/1/2020 08:22:34.028 CST', t => {
   expectDateAndTime(t, t.title, 2020, 1, 1, 8, 22, 34, 28);
 });
