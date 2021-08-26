@@ -85,6 +85,20 @@ export function parseDateAndTime(input, options = {rules: [], preferTime: false,
 
   input = input.toString().trim();
 
+  const parseRules = [
+    {
+      regex: /^c$/i,
+      parse: () => {
+        return new Date();
+      }
+    }
+  ];
+
+  const ruleResult = testForMatches(input, options.rules, parseRules);
+  if (isDate(ruleResult)) {
+    return ruleResult;
+  }
+
   let datePart = input;
   let timePart = '00:00:00';
 

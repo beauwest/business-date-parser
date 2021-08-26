@@ -40,7 +40,9 @@ function expectDateAndTime(t, input, year, month, day, hours = 0, minutes = 0, s
   t.is(result.getHours(), hours);
   t.is(result.getMinutes(), minutes);
   t.is(result.getSeconds(), seconds);
-  t.is(result.getMilliseconds(), milliseconds);
+  if (milliseconds !== false) {
+    t.is(result.getMilliseconds(), milliseconds);
+  }
 }
 
 test('Blank Date', t => {
@@ -252,7 +254,7 @@ test('time: 08:22:34.028 CST', t => {
 
 test('datetime: c', t => {
   const now = new Date();
-  expectDateAndTime(t, t.title, now.getFullYear(), now.getMonth() + 1, now.getDate());
+  expectDateAndTime(t, t.title, now.getFullYear(), now.getMonth() + 1, now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds(), false);
 });
 
 test('datetime: t', t => {

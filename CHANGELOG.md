@@ -1,5 +1,8 @@
 # Change Log
 
+## Release 1.0.10
+- Include time when using "c" with date & time parsing.
+
 ## Release 1.0.9
 - Fix "12:00 AM" time parsing.
 
