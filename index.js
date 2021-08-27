@@ -99,17 +99,16 @@ export function parseDateAndTime(input, options = {rules: [], preferTime: false,
     return ruleResult;
   }
 
-  let datePart = input;
-  let timePart = '00:00:00';
+  const parts = input.replace(/  +/g, ' ').split(' ');
 
-  const firstSpace = input.indexOf(' ');
-  if (firstSpace !== -1) {
-    datePart = input.substring(0, firstSpace);
-    timePart = input.substring(firstSpace + 1);
-  } else {
-    if (options.preferTime && !isLikelyDateFormat(input)) {
+  let datePart = parts.shift() || input;
+  let timePart = parts.join(' ') || '00:00:00';
+
+  if (options.preferTime && !isLikelyDateFormat(input)) {
+    const likelyTime = parseTime(input, options);
+    if (isDate(likelyTime)) {
       datePart = options.defaultDate || new Date();
-      timePart = input;
+      timePart = likelyTime;
     }
   }
 

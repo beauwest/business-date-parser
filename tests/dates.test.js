@@ -269,8 +269,18 @@ test('datetime: y', t => {
   expectDateAndTime(t, t.title, now.getFullYear(), now.getMonth() + 1, now.getDate());
 });
 
+test('datetime: y 08:36:50.900 CDT', t => {
+  const now = new Date();
+  now.setDate(now.getDate() - 1);
+  expectDateAndTime(t, t.title, now.getFullYear(), now.getMonth() + 1, now.getDate(), 8, 36, 50, 900);
+});
+
 test('datetime: 1/1/2020 08:22:34.028 CST', t => {
   expectDateAndTime(t, t.title, 2020, 1, 1, 8, 22, 34, 28);
+});
+
+test('datetime: 2021-08-27 08:36:50.900 CDT', t => {
+  expectDateAndTime(t, t.title, 2021, 8, 27, 8, 36, 50, 900);
 });
 
 test('datetime: 4/26', t => {
@@ -289,6 +299,18 @@ test('datetime: 9', t => {
   expectDateAndTime(t, t.title, now.getFullYear(), now.getMonth() + 1, 9);
 });
 
+test('datetime: 9 but Preferring Time', t => {
+  const now = new Date();
+  const result = parseDateAndTime('9', {preferTime: true});
+  t.is(result.getFullYear(), now.getFullYear());
+  t.is(result.getMonth(), now.getMonth());
+  t.is(result.getDate(), now.getDate());
+  t.is(result.getHours(), 9);
+  t.is(result.getMinutes(), 0);
+  t.is(result.getSeconds(), 0);
+  t.is(result.getMilliseconds(), 0);
+});
+
 test('datetime: 9 with options', t => {
   const result = parseDateAndTime('9', {preferTime: true, defaultDate: '1988-04-26'});
   t.is(result.getFullYear(), 1988);
@@ -300,16 +322,40 @@ test('datetime: 9 with options', t => {
   t.is(result.getMilliseconds(), 0);
 });
 
-test('datetime: Valid Date with Slashes but Preferring TIme', t => {
+test('datetime: Valid Date with Slashes but Preferring Time', t => {
   const result = parseDateAndTime('4/26/1988', {preferTime: true});
   t.is(result.getFullYear(), 1988);
   t.is(result.getMonth() + 1, 4);
   t.is(result.getDate(), 26);
 });
 
-test('datetime: Valid Date with Dashes but Preferring TIme', t => {
+test('datetime: Valid Date with Dashes but Preferring Time', t => {
   const result = parseDateAndTime('1988-04-26', {preferTime: true});
   t.is(result.getFullYear(), 1988);
   t.is(result.getMonth() + 1, 4);
   t.is(result.getDate(), 26);
+});
+
+test('datetime: Valid Time but Preferring Time', t => {
+  const result = parseDateAndTime('08:36:50.900 CDT', {preferTime: true});
+  t.is(result.getHours(), 8);
+  t.is(result.getMinutes(), 36);
+  t.is(result.getSeconds(), 50);
+  t.is(result.getMilliseconds(), 900);
+});
+
+test('datetime: Yesterday but Preferring Time', t => {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  const result = parseDateAndTime('y', {preferTime: true});
+  t.log(result);
+  t.log(yesterday);
+  t.is(result.getFullYear(), yesterday.getFullYear());
+  t.is(result.getMonth(), yesterday.getMonth());
+  t.is(result.getDate(), yesterday.getDate());
+  t.is(result.getHours(), 0);
+  t.is(result.getMinutes(), 0);
+  t.is(result.getSeconds(), 0);
+  t.is(result.getMilliseconds(), 0);
 });
