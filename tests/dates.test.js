@@ -171,6 +171,30 @@ test('date: 2025-03-01', t => {
   expectDate(t, t.title, 2025, 3, 1);
 });
 
+test('date: 20210607', t => { // YYYYMMDD
+  expectDate(t, t.title, 2021, 6, 7);
+});
+
+test('date: 12111988', t => { // MMDDYYYY
+  expectDate(t, t.title, 1988, 12, 11);
+});
+
+test('date: 13111988', t => { // DDMMYYYY
+  expectDate(t, t.title, 1988, 11, 13);
+});
+
+test('date: 20012008', t => { // DDMMYYYY
+  expectDate(t, t.title, 2008, 1, 20);
+});
+
+test('date: 12012008', t => { // MMDDYYYY
+  expectDate(t, t.title, 2008, 12, 1);
+});
+
+test('date: 19910102', t => { // YYYYMMDD
+  expectDate(t, t.title, 1991, 1, 2);
+});
+
 test('date: -20', t => {
   const now = new Date();
   now.setDate(now.getDate() - 20);

@@ -1,5 +1,8 @@
 # Change Log
 
+## Release 1.0.12
+- Added support for 8-digit input, with no delimeters. The date parser will guess at valid dates in the following order: YYYYMMDD, MMDDYYYY, and DDMMYYYY.
+
 ## Release 1.0.11
 - Rewrite how the preferTime option for parseDateAndTime works. If the option is used, it will attempt to parse the entire input as time and use the result if it's a valid date.
 - Added 5 more tests.
