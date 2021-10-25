@@ -350,7 +350,7 @@ export function parseTime(input, options = {rules: []}) {
       }
     },
     {
-      regex: /^(\d{1,2})[:.,;\-]?(\d{1,2})?[:.,;\-]?(\d{1,2})?[:.,;\-]?(\d{1,3})?[:.,;\-]?\s*([ap]m?)?/i,
+      regex: /^(\d{1,2})[:.,;\-]?(\d{1,2})?[:.,;\-]?(\d{1,2})?[:.,;\-]?(\d{1,3})?[:.,;\-]?\s*([ap](?=[m]|^\w|$))?/i,
       parse: (matches) => {
         let hours = matches[1];
         const minutes = matches[2] || 0;

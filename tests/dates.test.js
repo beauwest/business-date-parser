@@ -276,6 +276,14 @@ test('time: 08:22:34.028 CST', t => {
   expectTime(t, t.title, 8, 22, 34, 28);
 });
 
+test('time: 08:00:00.000 PDT', t => {
+  expectTime(t, t.title, 8, 0, 0, 0);
+});
+
+test('time: 22:00:00.000 AST', t => {
+  expectTime(t, t.title, 22, 0, 0, 0);
+});
+
 test('datetime: c', t => {
   const now = new Date();
   expectDateAndTime(t, t.title, now.getFullYear(), now.getMonth() + 1, now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds(), false);
