@@ -1,5 +1,8 @@
 # Change Log
 
+## Release 1.0.15
+- Fixed support for negative offsets in ISO 8601 formatted time parts.
+
 ## Release 1.0.14
 - Added support for ISO 8601 formatted time parts.
 - Removed some debug logging.

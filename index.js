@@ -349,7 +349,7 @@ export function parseTime(input, options = {rules: []}) {
       }
     },
     {
-      regex: /^(\d{2}):(\d{2}):(\d{2})([.]\d{1,3})?([+]\d{1,4})$/, // ISO 8601 Time Part
+      regex: /^(\d{2}):(\d{2}):(\d{2})([.]\d{1,3})?([-+]\d{1,4})$/, // ISO 8601 Time Part
       parse: (matches, input) => {
         return systemParseDate(`${new Date().toISOString().substring(0, 10)} ${input}`);
       }
