@@ -381,13 +381,39 @@ test('datetime: Yesterday but Preferring Time', t => {
   yesterday.setDate(yesterday.getDate() - 1);
 
   const result = parseDateAndTime('y', {preferTime: true});
-  t.log(result);
-  t.log(yesterday);
   t.is(result.getFullYear(), yesterday.getFullYear());
   t.is(result.getMonth(), yesterday.getMonth());
   t.is(result.getDate(), yesterday.getDate());
   t.is(result.getHours(), 0);
   t.is(result.getMinutes(), 0);
   t.is(result.getSeconds(), 0);
+  t.is(result.getMilliseconds(), 0);
+});
+
+test('datetime: PostgreSQL ISO 8601 +00', t => {
+  const offset = new Date().getTimezoneOffset();
+  const offsetHours = Math.floor(offset / 60);
+  const offsetMinutes = (offset % 60);
+  const result = parseDateAndTime('2021-11-21 11:19:16+00');
+  t.is(result.getFullYear(), 2021);
+  t.is(result.getMonth(), 10);
+  t.is(result.getDate(), 21);
+  t.is(result.getHours(), 11 - offsetHours);
+  t.is(result.getMinutes(), 19 - offsetMinutes);
+  t.is(result.getSeconds(), 16);
+  t.is(result.getMilliseconds(), 0);
+});
+
+test('datetime: PostgreSQL ISO 8601 +0200', t => {
+  const offset = new Date().getTimezoneOffset();
+  const offsetHours = Math.floor(offset / 60) + 2;
+  const offsetMinutes = (offset % 60);
+  const result = parseDateAndTime('2021-11-21 11:19:16+0200');
+  t.is(result.getFullYear(), 2021);
+  t.is(result.getMonth(), 10);
+  t.is(result.getDate(), 21);
+  t.is(result.getHours(), 11 - offsetHours);
+  t.is(result.getMinutes(), 19 - offsetMinutes);
+  t.is(result.getSeconds(), 16);
   t.is(result.getMilliseconds(), 0);
 });

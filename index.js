@@ -8,17 +8,16 @@ function calculateFullYear(input) {
 }
 
 function systemParseDate(input) {
-  let parsed = Date.parse(input);
-  if (!isNaN(parsed)) {
-    return new Date(parsed);
-  }
-  if (!isDate(parsed)) {
-    parsed = new Date(input);
+  let parsed = new Date(input);
+  if (isDate(parsed)) {
+    return parsed;
+  } else {
+    parsed = Date.parse(input);
+    if (Number.isInteger(parsed)) {
+      return new Date(parsed);
+    }
   }
 
-  if (isDate(parsed)) {
-    return;
-  }
   return input;
 }
 
@@ -275,7 +274,7 @@ export function parseDate(input, options = {rules: []}) {
     {
       regex: /.*/,
       parse: (matches, input) => {
-        return Date.parse(input) || new Date(input);
+        return systemParseDate(input);
       }
     }
   ];
@@ -347,6 +346,12 @@ export function parseTime(input, options = {rules: []}) {
         const date = new Date();
         date.setHours(hour, minutes, 0, 0);
         return date;
+      }
+    },
+    {
+      regex: /^(\d{2}):(\d{2}):(\d{2})([.]\d{1,3})?([+]\d{1,4})$/, // ISO 8601 Time Part
+      parse: (matches, input) => {
+        return systemParseDate(`${new Date().toISOString().substring(0, 10)} ${input}`);
       }
     },
     {

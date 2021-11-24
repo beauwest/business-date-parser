@@ -1,5 +1,9 @@
 # Change Log
 
+## Release 1.0.14
+- Added support for ISO 8601 formatted time parts.
+- Removed some debug logging.
+
 ## Release 1.0.13
 - Fixed a bug that caused timezones that started with a "P" to assume PM.
 
