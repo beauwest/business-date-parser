@@ -1,5 +1,9 @@
 # Change Log
 
+## Release 1.0.16
+- Improves support for time-only date & time parsing
+- Simplify tests
+
 ## Release 1.0.15
 - Fixed support for negative offsets in ISO 8601 formatted time parts.
 
