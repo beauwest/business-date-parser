@@ -29,11 +29,11 @@ function expectTime(t, input, hours = 0, minutes = 0, seconds = 0, milliseconds 
   t.true(result.getMilliseconds() >= milliseconds || milliseconds === 0);
 }
 
-function expectDateAndTime(t, input, year, month, day, hours = 0, minutes = 0, seconds = 0, milliseconds = 0) {
+function expectDateAndTime(t, input, year, month, day, hours = 0, minutes = 0, seconds = 0, milliseconds = 0, options) {
   if (input.replace) {
     input = input.replace('datetime: ', '');
   }
-  const result = parseDateAndTime(input);
+  const result = parseDateAndTime(input, options);
   t.is(result.getFullYear(), year);
   t.is(result.getMonth() + 1, month);
   t.is(result.getDate(), day);
@@ -333,103 +333,51 @@ test('datetime: 9', t => {
 
 test('datetime: 9 but Preferring Time', t => {
   const now = new Date();
-  const result = parseDateAndTime('9', {preferTime: true});
-  t.is(result.getFullYear(), now.getFullYear());
-  t.is(result.getMonth(), now.getMonth());
-  t.is(result.getDate(), now.getDate());
-  t.is(result.getHours(), 9);
-  t.is(result.getMinutes(), 0);
-  t.is(result.getSeconds(), 0);
-  t.is(result.getMilliseconds(), 0);
+  expectDateAndTime(t, '9', now.getFullYear(), now.getMonth() + 1, now.getDate(), 9, 0, 0, 0, {preferTime: true});
 });
 
 test('datetime: 9 with options', t => {
-  const result = parseDateAndTime('9', {preferTime: true, defaultDate: '1988-04-26'});
-  t.is(result.getFullYear(), 1988);
-  t.is(result.getMonth() + 1, 4);
-  t.is(result.getDate(), 26);
-  t.is(result.getHours(), 9);
-  t.is(result.getMinutes(), 0);
-  t.is(result.getSeconds(), 0);
-  t.is(result.getMilliseconds(), 0);
+  expectDateAndTime(t, '9', 1988, 4, 26, 9, 0, 0, 0, {preferTime: true, defaultDate: '1988-04-26'});
 });
 
 test('datetime: Valid Date with Slashes but Preferring Time', t => {
-  const result = parseDateAndTime('4/26/1988', {preferTime: true});
-  t.is(result.getFullYear(), 1988);
-  t.is(result.getMonth() + 1, 4);
-  t.is(result.getDate(), 26);
+  expectDateAndTime(t, '4/26/1988', 1988, 4, 26, 0, 0, 0, 0, {preferTime: true});
 });
 
 test('datetime: Valid Date with Dashes but Preferring Time', t => {
-  const result = parseDateAndTime('1988-04-26', {preferTime: true});
-  t.is(result.getFullYear(), 1988);
-  t.is(result.getMonth() + 1, 4);
-  t.is(result.getDate(), 26);
+  expectDateAndTime(t, '1988-04-26', 1988, 4, 26, 0, 0, 0, 0, {preferTime: true});
 });
 
 test('datetime: Valid Time but Preferring Time', t => {
-  const result = parseDateAndTime('08:36:50.900 CDT', {preferTime: true});
-  t.is(result.getHours(), 8);
-  t.is(result.getMinutes(), 36);
-  t.is(result.getSeconds(), 50);
-  t.is(result.getMilliseconds(), 900);
+  const now = new Date();
+  expectDateAndTime(t, '08:36:50.900 CDT', now.getFullYear(), now.getMonth() + 1, now.getDate(), 8, 36, 50, 900, {preferTime: true});
 });
 
 test('datetime: Yesterday but Preferring Time', t => {
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
-
-  const result = parseDateAndTime('y', {preferTime: true});
-  t.is(result.getFullYear(), yesterday.getFullYear());
-  t.is(result.getMonth(), yesterday.getMonth());
-  t.is(result.getDate(), yesterday.getDate());
-  t.is(result.getHours(), 0);
-  t.is(result.getMinutes(), 0);
-  t.is(result.getSeconds(), 0);
-  t.is(result.getMilliseconds(), 0);
+  expectDateAndTime(t, 'y', yesterday.getFullYear(), yesterday.getMonth() + 1, yesterday.getDate(), 0, 0, 0, 0, {preferTime: true});
 });
 
 test('datetime: PostgreSQL ISO 8601 +00', t => {
   const offset = new Date().getTimezoneOffset();
   const offsetHours = Math.floor(offset / 60);
   const offsetMinutes = (offset % 60);
-  const result = parseDateAndTime('2021-11-21 11:19:16+00');
-  t.is(result.getFullYear(), 2021);
-  t.is(result.getMonth(), 10);
-  t.is(result.getDate(), 21);
-  t.is(result.getHours(), 11 - offsetHours);
-  t.is(result.getMinutes(), 19 - offsetMinutes);
-  t.is(result.getSeconds(), 16);
-  t.is(result.getMilliseconds(), 0);
+  expectDateAndTime(t, '2021-11-21 11:19:16+00', 2021, 11, 21, 11 - offsetHours, 19 - offsetMinutes, 16, 0);
 });
 
 test('datetime: PostgreSQL ISO 8601 +0200', t => {
   const offset = new Date().getTimezoneOffset();
   const offsetHours = Math.floor(offset / 60) + 2;
   const offsetMinutes = (offset % 60);
-  const result = parseDateAndTime('2021-11-21 11:19:16+0200');
-  t.is(result.getFullYear(), 2021);
-  t.is(result.getMonth(), 10);
-  t.is(result.getDate(), 21);
-  t.is(result.getHours(), 11 - offsetHours);
-  t.is(result.getMinutes(), 19 - offsetMinutes);
-  t.is(result.getSeconds(), 16);
-  t.is(result.getMilliseconds(), 0);
+  expectDateAndTime(t, '2021-11-21 11:19:16+0200', 2021, 11, 21, 11 - offsetHours, 19 - offsetMinutes, 16, 0);
 });
 
 test('datetime: PostgreSQL ISO 8601 -0200', t => {
   const offset = new Date().getTimezoneOffset();
   const offsetHours = Math.floor(offset / 60) - 2;
   const offsetMinutes = (offset % 60);
-  const result = parseDateAndTime('2021-11-21 11:19:16-0200');
-  t.is(result.getFullYear(), 2021);
-  t.is(result.getMonth(), 10);
-  t.is(result.getDate(), 21);
-  t.is(result.getHours(), 11 - offsetHours);
-  t.is(result.getMinutes(), 19 - offsetMinutes);
-  t.is(result.getSeconds(), 16);
-  t.is(result.getMilliseconds(), 0);
+  expectDateAndTime(t, '2021-11-21 11:19:16-0200', 2021, 11, 21, 11 - offsetHours, 19 - offsetMinutes, 16, 0);
 });
 
 test('datetime: 3am', t => {
@@ -444,26 +392,10 @@ test('datetime: 3pm', t => {
 
 test('datetime: 3am but preferring time', t => {
   const now = new Date();
-
-  const result = parseDateAndTime('3am', {preferTime: true});
-  t.is(result.getFullYear(), now.getFullYear());
-  t.is(result.getMonth(), now.getMonth());
-  t.is(result.getDate(), now.getDate());
-  t.is(result.getHours(), 3);
-  t.is(result.getMinutes(), 0);
-  t.is(result.getSeconds(), 0);
-  t.is(result.getMilliseconds(), 0);
+  expectDateAndTime(t, '3am', now.getFullYear(), now.getMonth() + 1, now.getDate(), 3, 0, 0, 0, {preferTime: true});
 });
 
 test('datetime: 3pm but preferring time', t => {
   const now = new Date();
-
-  const result = parseDateAndTime('3pm', {preferTime: true});
-  t.is(result.getFullYear(), now.getFullYear());
-  t.is(result.getMonth(), now.getMonth());
-  t.is(result.getDate(), now.getDate());
-  t.is(result.getHours(), 15);
-  t.is(result.getMinutes(), 0);
-  t.is(result.getSeconds(), 0);
-  t.is(result.getMilliseconds(), 0);
+  expectDateAndTime(t, '3pm', now.getFullYear(), now.getMonth() + 1, now.getDate(), 15, 0, 0, 0, {preferTime: true});
 });
