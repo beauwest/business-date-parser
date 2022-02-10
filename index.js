@@ -17,8 +17,7 @@ function systemParseDate(input) {
       return new Date(parsed);
     }
   }
-
-  return input;
+  return null;
 }
 
 function isDate(input) {
@@ -111,10 +110,18 @@ export function parseDateAndTime(input, options = {rules: [], preferTime: false,
     }
   }
 
-  const parsedDate = parseDate(datePart, options);
-  const parsedTime = parseTime(timePart, options);
+  let parsedDate = parseDate(datePart, options);
+  if (!parsedDate) {
+    parsedDate = new Date();
+    const likelyTime = parseTime(input, options);
+    if (isDate(likelyTime)) {
+      datePart = options.defaultDate || new Date();
+      timePart = likelyTime;
+    }
+  }
 
-  if (parsedTime) {
+  const parsedTime = parseTime(timePart, options);
+  if (parsedDate && parsedTime) {
     parsedDate.setHours(parsedTime.getHours(), parsedTime.getMinutes(), parsedTime.getSeconds(), parsedTime.getMilliseconds());
   }
 

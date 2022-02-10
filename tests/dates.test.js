@@ -431,3 +431,39 @@ test('datetime: PostgreSQL ISO 8601 -0200', t => {
   t.is(result.getSeconds(), 16);
   t.is(result.getMilliseconds(), 0);
 });
+
+test('datetime: 3am', t => {
+  const now = new Date();
+  expectDateAndTime(t, t.title, now.getFullYear(), now.getMonth() + 1, now.getDate(), 3);
+});
+
+test('datetime: 3pm', t => {
+  const now = new Date();
+  expectDateAndTime(t, t.title, now.getFullYear(), now.getMonth() + 1, now.getDate(), 15);
+});
+
+test('datetime: 3am but preferring time', t => {
+  const now = new Date();
+
+  const result = parseDateAndTime('3am', {preferTime: true});
+  t.is(result.getFullYear(), now.getFullYear());
+  t.is(result.getMonth(), now.getMonth());
+  t.is(result.getDate(), now.getDate());
+  t.is(result.getHours(), 3);
+  t.is(result.getMinutes(), 0);
+  t.is(result.getSeconds(), 0);
+  t.is(result.getMilliseconds(), 0);
+});
+
+test('datetime: 3pm but preferring time', t => {
+  const now = new Date();
+
+  const result = parseDateAndTime('3pm', {preferTime: true});
+  t.is(result.getFullYear(), now.getFullYear());
+  t.is(result.getMonth(), now.getMonth());
+  t.is(result.getDate(), now.getDate());
+  t.is(result.getHours(), 15);
+  t.is(result.getMinutes(), 0);
+  t.is(result.getSeconds(), 0);
+  t.is(result.getMilliseconds(), 0);
+});
