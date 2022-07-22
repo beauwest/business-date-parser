@@ -45,6 +45,15 @@ function expectDateAndTime(t, input, year, month, day, hours = 0, minutes = 0, s
   }
 }
 
+function getSystemOffset(addMinutes = 0) {
+  // Use a fixed date for the offset, so we get a non-varied offset when dealing with DST
+  const offset = new Date('2016-05-01T03:24:00Z').getTimezoneOffset() + addMinutes;
+  return {
+    hours: Math.floor(offset / 60),
+    minutes: (offset % 60)
+  };
+}
+
 test('Blank Date', t => {
   const blankValue = parseDate('');
   t.falsy(blankValue);
@@ -360,24 +369,18 @@ test('datetime: Yesterday but Preferring Time', t => {
 });
 
 test('datetime: PostgreSQL ISO 8601 +00', t => {
-  const offset = new Date().getTimezoneOffset();
-  const offsetHours = Math.floor(offset / 60);
-  const offsetMinutes = (offset % 60);
-  expectDateAndTime(t, '2021-11-21 11:19:16+00', 2021, 11, 21, 11 - offsetHours, 19 - offsetMinutes, 16, 0);
+  const offset = getSystemOffset();
+  expectDateAndTime(t, '2016-05-01 11:19:16+00', 2016, 5, 1, 11 - offset.hours, 19 - offset.minutes, 16, 0);
 });
 
 test('datetime: PostgreSQL ISO 8601 +0200', t => {
-  const offset = new Date().getTimezoneOffset();
-  const offsetHours = Math.floor(offset / 60) + 2;
-  const offsetMinutes = (offset % 60);
-  expectDateAndTime(t, '2021-11-21 11:19:16+0200', 2021, 11, 21, 11 - offsetHours, 19 - offsetMinutes, 16, 0);
+  const offset = getSystemOffset(120);
+  expectDateAndTime(t, '2016-05-01 11:19:16+0200', 2016, 5, 1, 11 - offset.hours, 19 - offset.minutes, 16, 0);
 });
 
 test('datetime: PostgreSQL ISO 8601 -0200', t => {
-  const offset = new Date().getTimezoneOffset();
-  const offsetHours = Math.floor(offset / 60) - 2;
-  const offsetMinutes = (offset % 60);
-  expectDateAndTime(t, '2021-11-21 11:19:16-0200', 2021, 11, 21, 11 - offsetHours, 19 - offsetMinutes, 16, 0);
+  const offset = getSystemOffset(-120);
+  expectDateAndTime(t, '2016-05-01 11:19:16-0200', 2016, 5, 1, 11 - offset.hours, 19 - offset.minutes, 16, 0);
 });
 
 test('datetime: 3am', t => {
@@ -398,4 +401,19 @@ test('datetime: 3am but preferring time', t => {
 test('datetime: 3pm but preferring time', t => {
   const now = new Date();
   expectDateAndTime(t, '3pm', now.getFullYear(), now.getMonth() + 1, now.getDate(), 15, 0, 0, 0, {preferTime: true});
+});
+
+test('datetime: 2022-04-01 13:00:00.000 PDT', t => {
+  const offset = getSystemOffset(120);
+  expectDateAndTime(t, t.title, 2022, 4, 1, 8 + offset.hours, 0 + offset.minutes, 0, 0, {preferTime: true});
+});
+
+test('datetime: 2022-04-01 12:00:00.000 Z', t => {
+  const offset = getSystemOffset();
+  expectDateAndTime(t, t.title, 2022, 4, 1, 12 - offset.hours, 0 - offset.minutes, 0, 0, {preferTime: true});
+});
+
+test('datetime: 2022-04-01T19:00:00.000Z', t => {
+  const offset = getSystemOffset();
+  expectDateAndTime(t, t.title, 2022, 4, 1, 19 - offset.hours, 0 - offset.minutes, 0, 0, {preferTime: true});
 });

@@ -36,6 +36,22 @@ function isLikelyDateFormat(input) {
   return (input.includes('-') || input.includes('/'));
 }
 
+function isLikelyISOFormat(input) {
+  // We only want this to match full formats that include full date, separator, and something after the time.
+  // YYYY-MM-DDTHH:MM:SSZ
+  if (input.length >= 20 && isLikelyDateFormat(input)) {
+    // Check for the "T" delimiter
+    if (/\d{2}T\d{2}/.test(input)) {
+      return true;
+    }
+    // See if it ends in a timezone, or offset.
+    if (/([A-Z]{1,5})|([+-]\d{1,4})$/.test(input)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function adjustForBusinessHours(hour) {
   hour = parseInt(hour, 10);
   if (hour >= 1 && hour <= 6) {
@@ -102,6 +118,11 @@ export function parseDateAndTime(input, options = {rules: [], preferTime: false,
   let datePart = parts.shift() || input;
   let timePart = parts.join(' ') || '00:00:00';
 
+  if (isLikelyISOFormat(input)) {
+    datePart = input;
+    timePart = null;
+  }
+
   if (options.preferTime && !isLikelyDateFormat(input)) {
     const likelyTime = parseTime(input, options);
     if (isDate(likelyTime)) {
@@ -115,7 +136,6 @@ export function parseDateAndTime(input, options = {rules: [], preferTime: false,
     parsedDate = new Date();
     const likelyTime = parseTime(input, options);
     if (isDate(likelyTime)) {
-      datePart = options.defaultDate || new Date();
       timePart = likelyTime;
     }
   }
@@ -124,6 +144,8 @@ export function parseDateAndTime(input, options = {rules: [], preferTime: false,
   if (parsedDate && parsedTime) {
     parsedDate.setHours(parsedTime.getHours(), parsedTime.getMinutes(), parsedTime.getSeconds(), parsedTime.getMilliseconds());
   }
+
+  if (input === '2021-11-21 11:19:16+00') console.log(parsedDate, parsedTime, new Date().getTimezoneOffset());
 
   return parsedDate;
 }
