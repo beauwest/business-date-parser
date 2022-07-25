@@ -316,7 +316,7 @@ test('datetime: y 08:36:50.900 CDT', t => {
 });
 
 test('datetime: 1/1/2020 08:22:34.028 CST', t => {
-  expectDateAndTime(t, t.title, 2020, 1, 1, 8, 22, 34, 28);
+  expectDateAndTimeISO(t, t.title, '2020-01-01T14:22:34.028Z');
 });
 
 test('datetime: 2021-01-27 08:36:50.900 CST', t => {
