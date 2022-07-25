@@ -1,5 +1,8 @@
 # Change Log
 
+## Release 1.0.18
+- Fixes several tests that were failing due to timezone issues.
+
 ## Release 1.0.17
 - Adds support for additional machine-style dates.
 
