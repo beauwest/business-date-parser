@@ -145,8 +145,6 @@ export function parseDateAndTime(input, options = {rules: [], preferTime: false,
     parsedDate.setHours(parsedTime.getHours(), parsedTime.getMinutes(), parsedTime.getSeconds(), parsedTime.getMilliseconds());
   }
 
-  if (input === '2021-11-21 11:19:16+00') console.log(parsedDate, parsedTime, new Date().getTimezoneOffset());
-
   return parsedDate;
 }
 
