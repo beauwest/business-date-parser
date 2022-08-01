@@ -108,7 +108,8 @@ test('date: t', t => {
 
 test('date: y', t => {
   const now = new Date();
-  expectDate(t, t.title, now.getFullYear(), now.getMonth() + 1, now.getDate() - 1);
+  now.setDate(now.getDate() - 1);
+  expectDate(t, t.title, now.getFullYear(), now.getMonth() + 1, now.getDate());
 });
 
 test('date: f', t => {

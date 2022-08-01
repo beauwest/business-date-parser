@@ -1,5 +1,9 @@
 # Change Log
 
+## Release 1.0.19
+- Removes debugging code.
+- Fixes the test for "Y" when run on the first of the month.
+
 ## Release 1.0.18
 - Fixes several tests that were failing due to timezone issues.
 
