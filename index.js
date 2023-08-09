@@ -74,7 +74,12 @@ function adjustForMeridiem(hours, meridiem) {
   return hours.toString();
 }
 
-function testForMatches(input = '', userRules = [], systemRules = []) {
+function testForMatches(input = '', userRules = [], systemRules = [], userRejectRules = [], systemRejectRules = []) {
+  for (const syntax of [...userRejectRules, ...systemRejectRules]) {
+    if (syntax.regex.test(input)) {
+      return null;
+    }
+  }
   for (const syntax of [...userRules, ...systemRules]) {
     if (syntax.regex.test(input)) {
       const matches = input.match(syntax.regex);
@@ -84,7 +89,7 @@ function testForMatches(input = '', userRules = [], systemRules = []) {
   return null;
 }
 
-export function parseDateAndTime(input, options = {rules: [], preferTime: false, defaultDate: null}) {
+export function parseDateAndTime(input, options = {rules: [], reject: [], preferTime: false, defaultDate: null}) {
   if (isDate(input)) {
     return input;
   }
@@ -108,7 +113,7 @@ export function parseDateAndTime(input, options = {rules: [], preferTime: false,
     }
   ];
 
-  const ruleResult = testForMatches(input, options.rules, parseRules);
+  const ruleResult = testForMatches(input, options.rules, parseRules, options.reject);
   if (isDate(ruleResult)) {
     return ruleResult;
   }
@@ -148,7 +153,7 @@ export function parseDateAndTime(input, options = {rules: [], preferTime: false,
   return parsedDate;
 }
 
-export function parseDate(input, options = {rules: []}) {
+export function parseDate(input, options = {rules: [], reject: []}) {
   if (isDate(input)) {
     return input;
   }
@@ -306,10 +311,10 @@ export function parseDate(input, options = {rules: []}) {
     }
   ];
 
-  return testForMatches(input, options.rules, parseRules);
+  return testForMatches(input, options.rules, parseRules, options.reject);
 }
 
-export function parseTime(input, options = {rules: []}) {
+export function parseTime(input, options = {rules: [], reject: []}) {
   if (isDate(input)) {
     return input;
   }
@@ -323,6 +328,10 @@ export function parseTime(input, options = {rules: []}) {
   }
 
   input = input.toString().trim();
+
+  const rejectRules = [
+    {regex: /^(\d+)[\/\\\-](\d+)[\/\\\-](\d{2,})$/}
+  ];
 
   const parseRules = [
     {
@@ -382,7 +391,7 @@ export function parseTime(input, options = {rules: []}) {
       }
     },
     {
-      regex: /^(\d{1,2})[:.,;\-]?(\d{1,2})?[:.,;\-]?(\d{1,2})?[:.,;\-]?(\d{1,3})?[:.,;\-]?\s*([ap](?=[m]|^\w|$))?/i,
+      regex: /^(\d{1,2})[:.,;\-]?(\d{1,2})?[:.,;\-]?(\d{1,2})?[:.,;\-]?(\d{1,3})?[:.,;\-]?\s*([ap](?=m|^\w|$))?/i,
       parse: (matches) => {
         let hours = matches[1];
         const minutes = matches[2] || 0;
@@ -399,5 +408,5 @@ export function parseTime(input, options = {rules: []}) {
     }
   ];
 
-  return testForMatches(input, options.rules, parseRules);
+  return testForMatches(input, options.rules, parseRules, options.reject, rejectRules);
 }

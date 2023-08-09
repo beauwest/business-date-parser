@@ -303,6 +303,16 @@ test('time: bad value', t => {
   t.falsy(result);
 });
 
+test('time: 2021-01-27', t => {
+  const result = parseTime('2021-01-27');
+  t.falsy(result);
+});
+
+test('time: 100/100/100', t => {
+  const result = parseTime('100/100/100');
+  t.falsy(result);
+});
+
 test('datetime: c', t => {
   const now = new Date();
   expectDateAndTime(t, t.title, now.getFullYear(), now.getMonth() + 1, now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds(), false);
