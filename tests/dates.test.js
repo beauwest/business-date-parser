@@ -216,6 +216,11 @@ test('date: +20', t => {
   expectDate(t, t.title, now.getFullYear(), now.getMonth() + 1, now.getDate());
 });
 
+test('date: bad value', t => {
+  const result = parseDate('bad value');
+  t.falsy(result);
+});
+
 test('time: c', t => {
   const now = new Date();
   expectTime(t, t.title, now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
@@ -291,6 +296,11 @@ test('time: 08:00:00.000 PDT', t => {
 
 test('time: 22:00:00.000 AST', t => {
   expectTime(t, t.title, 22, 0, 0, 0);
+});
+
+test('time: bad value', t => {
+  const result = parseTime('bad value');
+  t.falsy(result);
 });
 
 test('datetime: c', t => {
@@ -414,4 +424,14 @@ test('datetime: 2022-02-01T19:00:00.000Z', t => {
 
 test('datetime: 2022-03-28T16:11:37.5158301-05:00', t => {
   expectDateAndTimeISO(t, t.title, '2022-03-28T21:11:37.515Z');
+});
+
+test('datetime: bad value', t => {
+  const result = parseDateAndTime('bad value');
+  t.falsy(result);
+});
+
+test('datetime: bad value preferring time', t => {
+  const result = parseDateAndTime('bad value', {preferTime: true});
+  t.falsy(result);
 });

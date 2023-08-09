@@ -133,9 +133,9 @@ export function parseDateAndTime(input, options = {rules: [], preferTime: false,
 
   let parsedDate = parseDate(datePart, options);
   if (!parsedDate) {
-    parsedDate = new Date();
     const likelyTime = parseTime(input, options);
     if (isDate(likelyTime)) {
+      parsedDate = new Date();
       timePart = likelyTime;
     }
   }
