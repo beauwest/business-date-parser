@@ -74,6 +74,11 @@ function adjustForMeridiem(hours, meridiem) {
   return hours.toString();
 }
 
+function limitDayToLastOfMonth(year, month, day) {
+  const last = new Date(year, month + 1, 0);
+  return Math.min(day, last.getDate());
+}
+
 function testForMatches(input = '', userRules = [], systemRules = [], userRejectRules = [], systemRejectRules = []) {
   for (const syntax of [...userRejectRules, ...systemRejectRules]) {
     if (syntax.regex.test(input)) {
@@ -233,16 +238,19 @@ export function parseDate(input, options = {rules: [], reject: []}) {
       regex: /^(\d{1,2})$/, // DD
       parse: (matches) => {
         const date = new Date();
-        date.setDate(parseInt(matches[1], 10));
+        const parsedDay = parseInt(matches[1], 10);
+        date.setDate(limitDayToLastOfMonth(date.getFullYear(), date.getMonth(), parsedDay));
         date.setHours(0, 0, 0, 0);
         return date;
       }
     },
     {
       regex: /^(\d{1,2})[\/\\\-.,;](\d{1,2})?$/, // MM/ or MM/DD
-      parse: (matches) => {
+      parse: (matches, input) => {
         const date = new Date();
-        date.setMonth(parseInt(matches[1], 10) - 1, parseInt(matches[2] || 1, 10));
+        const parsedMonth = parseInt(matches[1], 10) - 1;
+        const parsedDay = parseInt(matches[2] || 1, 10);
+        date.setMonth(parsedMonth, limitDayToLastOfMonth(date.getFullYear(), parsedMonth, parsedDay));
         date.setHours(0, 0, 0, 0);
         return date;
       }
@@ -259,7 +267,9 @@ export function parseDate(input, options = {rules: [], reject: []}) {
         if (year) {
           date.setFullYear(parseInt(year, 10));
         }
-        date.setMonth(parseInt(matches[1], 10) - 1, parseInt(matches[2], 10));
+        const parsedMonth = parseInt(matches[1], 10) - 1;
+        const parsedDay = parseInt(matches[2], 10);
+        date.setMonth(parsedMonth, limitDayToLastOfMonth(year || date.getFullYear(), parsedMonth, parsedDay));
         date.setHours(0, 0, 0, 0);
         return date;
       }
@@ -268,8 +278,10 @@ export function parseDate(input, options = {rules: [], reject: []}) {
       regex: /^(\d{4})[\/\\\-.,;](\d{1,2})[\/\\\-.,;](\d{1,2})$/, // YYYY-MM-DD
       parse: (matches) => {
         const date = new Date();
-        date.setFullYear(parseInt(matches[1], 10));
-        date.setMonth(parseInt(matches[2], 10) - 1, parseInt(matches[3], 10));
+        const parsedYear = parseInt(matches[1], 10);
+        const parsedMonth = parseInt(matches[2], 10) - 1;
+        const parsedDay = parseInt(matches[3], 10);
+        date.setFullYear(parsedYear, parsedMonth, limitDayToLastOfMonth(parsedYear, parsedMonth, parsedDay));
         date.setHours(0, 0, 0, 0);
         return date;
       }
@@ -297,8 +309,7 @@ export function parseDate(input, options = {rules: [], reject: []}) {
         }
         
         const date = new Date();
-        date.setFullYear(year);
-        date.setMonth(month - 1, day);
+        date.setFullYear(year, month - 1, limitDayToLastOfMonth(year, month - 1, day));
         date.setHours(0, 0, 0, 0);
         return date;
       }

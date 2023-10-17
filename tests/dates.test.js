@@ -132,6 +132,12 @@ test('date: 11/', t => {
   expectDate(t, t.title, now.getFullYear(), 11, 1);
 });
 
+test('date: 55', t => {
+  const now = new Date();
+  const last = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  expectDate(t, t.title, now.getFullYear(), now.getMonth() + 1, last.getDate());
+});
+
 test('date: 4/26', t => {
   const now = new Date();
   expectDate(t, t.title, now.getFullYear(), 4, 26);
@@ -150,6 +156,38 @@ test('date: 4/26/', t => {
 test('date: 4-26', t => {
   const now = new Date();
   expectDate(t, t.title, now.getFullYear(), 4, 26);
+});
+
+test('date: 9/31', t => {
+  const now = new Date();
+  expectDate(t, t.title, now.getFullYear(), 9, 30);
+});
+
+test('date: 9/55', t => {
+  const now = new Date();
+  expectDate(t, t.title, now.getFullYear(), 9, 30);
+});
+
+test('date: 3/31', t => {
+  const now = new Date();
+  expectDate(t, t.title, now.getFullYear(), 3, 31);
+});
+
+test('date: 3/32', t => {
+  const now = new Date();
+  expectDate(t, t.title, now.getFullYear(), 3, 31);
+});
+
+test('date: 3/32/1999', t => {
+  expectDate(t, t.title, 1999, 3, 31);
+});
+
+test('date: 1999-03-32', t => {
+  expectDate(t, t.title, 1999, 3, 31);
+});
+
+test('date: 2024-02-31', t => {
+  expectDate(t, t.title, 2024, 2, 29);
 });
 
 test('date: 4/26/1988', t => {
@@ -202,6 +240,10 @@ test('date: 12012008', t => { // MMDDYYYY
 
 test('date: 19910102', t => { // YYYYMMDD
   expectDate(t, t.title, 1991, 1, 2);
+});
+
+test('date: 20240231', t => {
+  expectDate(t, t.title, 2024, 2, 29);
 });
 
 test('date: -20', t => {
@@ -344,9 +386,24 @@ test('datetime: 2021-01-27 08:36:50.900 CST', t => {
   expectDateAndTimeISO(t, t.title, '2021-01-27T14:36:50.900Z');
 });
 
+test('datetime: 55', t => {
+  const now = new Date();
+  const last = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  expectDateAndTime(t, t.title, now.getFullYear(), now.getMonth() + 1, last.getDate());
+});
+
 test('datetime: 4/26', t => {
   const now = new Date();
   expectDateAndTime(t, t.title, now.getFullYear(), 4, 26);
+});
+
+test('datetime: 9/55', t => {
+  const now = new Date();
+  expectDateAndTime(t, t.title, now.getFullYear(), 9, 30);
+});
+
+test('datetime: 2/31/2024', t => {
+  expectDateAndTime(t, t.title, 2024, 2, 29);
 });
 
 test('datetime: +3 2:30p', t => {
